@@ -1,0 +1,500 @@
+// modified version of shower-ribbon theme
+
+@import 'defaults';
+@import 'fonts';
+@import 'reset';
+
+body {
+	counter-reset:slide;
+	font:30px/2 'PT Sans', sans-serif;
+}
+
+a {
+	color:$elixir-green;
+	//@include underline($elixir-green, 0.09);
+	text-decoration:none;
+}
+
+h1, h2, h3, h4, h5, h6, p, div {
+	text-align: center;
+}
+
+pre, code {
+	background-color: $terminal-background;
+	text-align: left;
+}
+
+h3 {
+	font:bold 35px/1 'Open Sans Light', sans-serif;
+}
+
+span.danger {
+	color: $elixir-purple;
+}
+
+// Caption
+// -------------------------------
+.caption {
+	display:none;
+	margin:0 0 50px;
+	color:#3C3D40;
+	text-shadow:0 1px 1px #8D8E90;
+	h1 {
+		font:bold 50px/1 'PT Sans Narrow', sans-serif;
+	}
+	a {
+		text-shadow:0 -1px 1px #1F3F60;
+		background:none;
+		&:hover {
+			color:lighten($elixir-green, 5%);
+		}
+	}
+}
+
+
+// Slide
+// -------------------------------
+.slide {
+	position:relative;
+	width:$width;
+	height:$height;
+	background: $elixir-background;
+	color:#333;
+	-webkit-print-color-adjust:exact;
+	-webkit-text-size-adjust:none;
+	-moz-text-size-adjust:none;
+	-ms-text-size-adjust:none;
+	// Number
+
+	&:after {
+		position:absolute;
+		right:0;
+		top:20px;
+		left:0;
+		color:#ccc;
+		counter-increment:slide;
+		content:counter(slide);
+		text-align:right;
+		padding-right:20px;
+		line-height:1;
+	}
+	// Inner
+	> div {
+		position:absolute;
+		top:0;
+		left:0;
+		overflow:hidden;
+		padding:$top $sides 0;
+		width:$width - $sides * 2;
+		height:$height - $top;
+	}
+}
+
+// Elements
+// -------------------------------
+.slide {
+	// Header
+	h1 {
+		margin:0 0 35px;
+		color: $elixir-purple;
+		font:bold 70px/1 'PT Sans Narrow', sans-serif;
+	}
+
+	// Text
+	p {
+		margin:0 0 20px;
+	}
+	p.note {
+		color:#999;
+	}
+	b, strong {
+		font-weight:bold;
+	}
+	i, em {
+		font-style:italic;
+	}
+	kbd, code, samp {
+		padding:3px 10px;
+		border-radius:4px;
+		background:$terminal-background;
+		color:$terminal-text;
+		tab-size:4;
+		line-height:1;
+		font-family: 'Inconsolata', 'PT Mono', monospace;
+	}
+	sub, sup {
+		position: relative;
+		line-height:0;
+		font-size:75%;
+	}
+	sub {
+		bottom:-0.25em;
+	}
+	sup {
+		top:-0.5em;
+	}
+	// Quote
+	blockquote {
+		font-style:italic;
+		&:before {
+			position:absolute;
+			margin:-16px 0 0 -80px;
+			color:#CCC;
+			font:200px/1 'PT Sans', sans-serif;
+			content:'\201C';
+		}
+		& + figcaption {
+			margin:-50px 0 50px;
+			font-style:italic;
+			font-weight:bold;
+		}
+	}
+	// Lists
+	ol, ul {
+		margin:0 0 20px;
+		line-height: 1.5em;
+		counter-reset:list;
+		li {
+			text-indent:-2em;
+			&:before {
+				display:inline-block;
+				width:2em;
+				color:#BBB;
+				text-align:right;
+			}
+		}
+	}
+	ul > li:before {
+		content:'\2022\00A0\00A0';
+	}
+	ul > li:lang(ru):before {
+		content:'\2014\00A0\00A0';
+	}
+	ol > li:before {
+		counter-increment:list;
+		content:counter(list)'.\00A0';
+	}
+	// Code
+	pre {
+		margin:0 0 10px;
+		padding: 4px 4px 4px 8px;
+		counter-reset:code;
+		white-space:normal;
+		border-radius:4px;
+
+		code {
+			display:block;
+			padding:0;
+			background:none;
+			white-space:pre;
+			line-height:1.1em;
+
+			&:only-child:before {
+				content:'';
+			}
+		}
+	}
+
+	&.small-code {
+		pre, code {
+			font-size: .68em;
+		}
+	}
+
+	&.smallish-code {
+		pre, code {
+			font-size: .9em;
+		}
+	}
+
+	&.push-content-down {
+		h1 {
+			padding-bottom: 60px;
+		}
+	}
+
+	&.myth {
+		h1 {
+			color: $elixir-green;
+		}
+	}
+
+	&.quieter {
+		h1 {
+			font-size: 120px !important;
+		}
+	}
+
+	&.quietest {
+		h1 {
+			font-size: 70px !important;
+		}
+
+		h2 {
+			font-size: 30px !important;
+		}
+	}
+
+
+	// Shout
+	&.shout {
+		h1 {
+			position:absolute;
+			top:50%;
+			left:0;
+			width:100%;
+			text-align:center;
+			line-height:.9;
+			font-size:150px;
+			transform:translateY(-50%);
+			a {
+				//@include underline($elixir-green, 0.11);
+			}
+		}
+		h2 {
+			position:absolute;
+			top:85%;
+			left:0;
+			width:100%;
+			text-align:center;
+			line-height:1;
+			transform:translateY(-50%);
+			font:bold 35px/1 'Open Sans Light', sans-serif;
+			a {
+				//@include underline($elixir-green, 0.11);
+			}
+		}
+	}
+
+	// Notes
+	footer {
+		position:absolute;
+		left:0;
+		right:0;
+		bottom:-$height;
+		z-index:1;
+		display:none;
+		padding:20px 120px;
+		background:$yellow;
+		box-shadow:0 0 0 2px desaturate($yellow, 20%) inset;
+		transition:bottom 0.3s;
+	}
+	&:hover footer {
+		bottom:0;
+	}
+}
+
+// Screen
+@media screen {
+	// List
+	.list {
+		position:absolute;
+		clip:rect(0, auto, auto, 0); // Having fun with IE10
+		padding:80px 0 40px 100px;
+		background:#585A5E url(../images/linen.png);
+		@include retina {
+			background-image:url(../images/linen@2x.png);
+			background-size:256px;
+		}
+		// Outfit
+		.caption,
+		.badge {
+			display:block;
+		}
+		// Slide
+		.slide {
+			float:left;
+			margin:0 (100-$width/2) (100-$height/2) 0;
+			transform-origin:0 0;
+			transform:scale(0.5);
+			@media (max-width:$break) {
+				margin:0 (80-($width/2+$width/4)) (80-($height/2+$height/4)) 0;
+				transform:scale(0.25);
+			}
+			// Shadow
+			&:before {
+				position:absolute;
+				top:0;
+				left:0;
+				z-index:-1;
+				width:$width/2;
+				height:$height/2;
+				box-shadow:
+				0 0 30px rgba(#000, 0.005),
+				0 20px 50px rgba($grey, 0.6);
+				border-radius:2px;
+				content:'';
+				transform-origin:0 0;
+				transform:scale(2);
+				@media (max-width:$break) {
+					width:$width/4;
+					height:$height/4;
+					transform:scale(4);
+				}
+			}
+			// Number
+			&:after {
+				top:auto;
+				right:auto;
+				bottom:-80px;
+				left:120px;
+				padding:0;
+				width:auto;
+				height:auto;
+				background:none;
+				color:#3C3D40;
+				text-shadow:0 1px 1px #8D8E90;
+				font-weight:bold;
+				transform-origin:0 0;
+				transform:scale(2);
+				@media (max-width:$break) {
+					bottom:-104px;
+					transform:scale(4);
+				}
+			}
+			// Hover
+			&:hover:before {
+				box-shadow:
+				0 0 0 10px rgba($grey, 0.3),
+				0 20px 50px rgba($grey, 0.6);
+			}
+			// Current
+			&:target {
+				&:before {
+					box-shadow:
+					0 0 0 1px darken($elixir-green, 10%),
+					0 0 0 10px $elixir-green,
+					0 20px 50px rgba($grey, 0.6);
+					@media (max-width:$break) {
+						box-shadow:
+						0 0 0 1px darken($elixir-green, 10%),
+						0 0 0 10px $elixir-green,
+						0 20px 50px rgba($grey, 0.6);
+					}
+				}
+				&:after {
+					text-shadow:0 1px 1px rgba($grey, 0.6);
+					color:$elixir-green;
+				}
+			}
+			// Inner
+			> div {
+				&:before {
+					position:absolute;
+					top:0;
+					right:0;
+					bottom:0;
+					left:0;
+					z-index:2;
+					content:'';
+				}
+			}
+			// Cover Shout
+			&.cover,
+			&.shout {
+				&:after {
+					visibility:visible;
+				}
+			}
+
+            &.cover > div {
+                padding: 0;
+            }
+            &.cover > div > img {
+                    width: 100%;
+            }
+			// Notes
+			footer {
+				display:block;
+			}
+		}
+	}
+	// Full
+	.full {
+		position:absolute;
+		top:50%;
+		left:50%;
+		overflow:hidden;
+		margin:(-$height/2) 0 0 (-$width/2);
+		width:$width;
+		height:$height;
+		background:#000;
+		// Debug
+		&.debug:after {
+			position:absolute;
+			top:0;
+			right:0;
+			bottom:0;
+			left:0;
+			z-index:2;
+			background:url(../images/grid-#{$ratio}.svg) no-repeat;
+			content:'';
+		}
+		// Slide
+		.slide {
+			position:absolute;
+			top:0;
+			left:0;
+			margin-left:150%;
+			// Next
+			.next {
+				visibility:hidden;
+				&.active {
+					visibility:visible;
+				}
+			}
+			// Current
+			&:target {
+				margin:0;
+			}
+			// Shout
+			&.shout {
+				&.grow, &.shrink {
+					h1 {
+						opacity:0;
+						transition:all 0.4s ease-out;
+					}
+					&:target h1 {
+						opacity:1;
+						transform:scale(1) translateY(-50%);
+					}
+				}
+				&.grow h1 {
+					transform:scale(0.1) translateY(-50%);
+				}
+				&.shrink h1 {
+					transform:scale(10) translateY(-50%);
+				}
+			}
+		}
+		// Progress
+		.progress {
+			position:absolute;
+			right:0;
+			bottom:0;
+			left:0;
+			overflow:hidden;
+			height:10px;
+			z-index:1;
+			div {
+				position:absolute;
+				left:-20px;
+				top:-10px;
+				width:0;
+				height:0;
+				border:10px solid transparent;
+				border-bottom-color:$elixir-green;
+				transition:width 0.2s linear;
+				&[style$='100%;'] {
+					padding-left:10px;
+				}
+			}
+		}
+	}
+}
+
+// Print
+@page {
+	margin:0;
+	size:$width $height;
+}
