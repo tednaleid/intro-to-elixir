@@ -24,6 +24,12 @@ pre, code {
 	text-align: left;
 }
 
+.smaller-code {
+    pre, code {
+        font-size: 0.85em;
+    }
+}
+
 h3 {
 	font:bold 35px/1 'Open Sans Light', sans-serif;
 }

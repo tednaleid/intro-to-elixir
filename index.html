@@ -8,7 +8,7 @@
 	<meta name="generator" content="https://github.com/sapegin/grunt-shower-markdown">
 	<link rel="stylesheet" href="themes/ribbon/styles/screen.css">
 	
-		<link rel="stylesheet" href="styles/screen.css?1433877457000">
+		<link rel="stylesheet" href="styles/screen.css?1435539771000">
 	
 </head>
 <body class="list">
@@ -63,9 +63,25 @@
 
 	</div></section>
 	
-	<section class="slide quieter shout" ><div>
-		<h1>Short List</h1>
-<h2>Ruby + $$$, Erlang, Clojure</h2>
+	<section class="slide quietest" ><div>
+		<h1>Short List Choice #1: Ruby + $$$</h1>
+<h2><strong>Good</strong><br/>Natural Syntax, Fast and Repeatable Dev Cycle, Metaprogramming</h2>
+<h2><strong>Bad</strong><br/>Concurrent and Fast, Failure Management</h2>
+
+	</div></section>
+	
+	<section class="slide quietest" ><div>
+		<h1>Short List Choice #2: Erlang</h1>
+<h2><strong>Good</strong><br/>Failure Management, Concurrent and Fast</h2>
+<h2><strong>Bad</strong><br/>Natural Syntax, Fast and Repeatable Dev Cycle, Metaprogramming</h2>
+
+	</div></section>
+	
+	<section class="slide quietest" ><div>
+		<h1>Short List Choice #3: Clojure</h1>
+<h2><strong>Good</strong><br/>Concurrent and Fast, Metaprogramming, Fast &amp; Repeatable Dev Cycle</h2>
+<h2><strong>OK</strong><br/>Failure Management</h2>
+<h2><strong>Bad</strong><br/>Natural Syntax</h2>
 
 	</div></section>
 	
@@ -83,7 +99,7 @@
 	
 	<section class="slide shout quieter" ><div>
 		<h1>What is Erlang/BEAM?</h1>
-<h2>Created by Ericsson in 1986 to support distributed, fault-tolerant, always-up systems</h2>
+<h2>Language + VM, Created by Ericsson in 1986 to support distributed, fault-tolerant, always-up systems</h2>
 
 	</div></section>
 	
@@ -139,17 +155,15 @@
 <code>#Function&lt;12.90072148/2 in :erl_eval.expr/5&gt;</code>
 <code>&shy;</code>
 <code>iex&gt; sum.(1, 2)</code>
-<code>3</code></pre>
-	</div></section>
-	
-	<section class="slide " ><div>
-		<h1>Closures</h1>
-<pre><code>iex&gt; sum = &amp;(&amp;1 + &amp;2)</code>
+<code>3</code>
+<code>&shy;</code>
+<code># shortened closure syntax:</code>
+<code>&shy;</code>
+<code>iex&gt; short_sum = &amp;(&amp;1 + &amp;2)</code>
 <code>&amp;:erlang.+/2</code>
 <code>&shy;</code>
-<code>iex&gt; sum.(1, 2)</code>
-<code>3</code></pre><p>shortened closure syntax</p>
-
+<code>iex&gt; short_sum.(1, 2)</code>
+<code>3</code></pre>
 	</div></section>
 	
 	<section class="slide " ><div>
@@ -188,11 +202,23 @@
 	
 	<section class="slide " ><div>
 		<h1>Pattern Matching</h1>
-<pre><code>iex&gt; {:ok, result} = {:ok, &quot;hello world&quot;}</code>
-<code>{:ok, &quot;hello world&quot;}</code>
+<pre><code>iex&gt; a = {:ok, 1}</code>
+<code>{:ok, 1}  </code>
 <code>&shy;</code>
-<code>iex&gt; result</code>
-<code>&quot;hello world&quot;</code>
+<code>iex&gt; {:ok, b} = {:ok, 1}</code>
+<code>{:ok, 1}</code>
+<code>&shy;</code>
+<code>iex&gt; b</code>
+<code>1    </code></pre>
+	</div></section>
+	
+	<section class="slide " ><div>
+		<h1>Pattern Matching Lists</h1>
+<pre><code>iex&gt; [a, b, c] = [1, 2, 3]</code>
+<code>[1, 2, 3]</code>
+<code>&shy;</code>
+<code>iex&gt; a</code>
+<code>1</code>
 <code>&shy;</code>
 <code>iex&gt; [head | tail] = [1, 2, 3]</code>
 <code>[1, 2, 3]</code>
@@ -205,13 +231,15 @@
 	</div></section>
 	
 	<section class="slide " ><div>
-		<h1>More Pattern Matching</h1>
+		<h1>Pattern Matching Structs</h1>
 <pre><code>case HTTP.get(url) do</code>
-<code>  {:ok, %HTTP.Resp{status_code: 200, body: body}} -&gt;</code>
+<code>  {:ok, %HTTP.Resp{ status: 200, body: body }} -&gt;</code>
 <code>    IO.puts body</code>
-<code>  {:ok, %HTTP.Resp{status_code: 404}} -&gt;</code>
+<code>  {:ok, %HTTP.Resp{ status: 404 }} -&gt;</code>
 <code>    IO.puts &quot;Not found :(&quot;</code>
-<code>  {:error, %HTTP.Error{reason: reason}} -&gt;</code>
+<code>  {:ok, %HTTP.Resp{ status: status }} -&gt;</code>
+<code>    IO.puts &quot;HTTP Status: #{status}&quot;</code>
+<code>  {:error, %HTTP.Error{ reason: reason }} -&gt;</code>
 <code>    IO.inspect reason</code>
 <code>  _ -&gt;</code>
 <code>    IO.puts &quot;¯\_(ツ)_/¯&quot;</code>
@@ -237,18 +265,19 @@
 	
 	<section class="slide " ><div>
 		<h1>Pipe Operator <code>|&gt;</code></h1>
-<pre><code>defmodule Store do</code>
+<pre><code>defmodule Shop do</code>
 <code>  defp apply_tax(prices) do </code>
-<code>    Enum.map(prices, &amp;(&amp;1 * 1.1))</code>
+<code>    Enum.map(prices, fn v -&gt; v * 1.1 end)</code>
 <code>  end</code>
 <code>&shy;</code>
 <code>  def cart_total(items) do</code>
-<code>    Enum.sum(apply_tax(Enum.map(items, &amp;(&amp;1.price))))</code>
+<code>    Enum.sum(</code>
+<code>      apply_tax(</code>
+<code>        Enum.map(items, fn item -&gt; item.price end)))</code>
 <code>  end</code>
 <code>end </code>
 <code>&shy;</code>
-<code>items = [%{:price =&gt; 5.00}, %{:price =&gt; 2.00}]</code>
-<code>Store.cart_total(items)</code>
+<code>Shop.cart_total([%{:price=&gt;5.00}, %{:price=&gt;2.00}])</code>
 <code># =&gt; 7.7</code></pre><p>Nested <code>cart_total</code> is hard to read, have to read inside out</p>
 
 	</div></section>
@@ -256,7 +285,7 @@
 	<section class="slide " ><div>
 		<h1>Pipe Operator <code>|&gt;</code></h1>
 <pre><code>  def cart_total(items) do</code>
-<code>    prices = Enum.map(items, &amp;(&amp;1.price))</code>
+<code>    prices = Enum.map(items, fn itm -&gt; itm.price end)</code>
 <code>    prices_with_tax = apply_tax(prices)</code>
 <code>    Enum.sum(prices_with_tax)</code>
 <code>  end</code></pre><p>Intermediate variables cleans up a bit</p>
@@ -267,7 +296,7 @@
 		<h1>Pipe Operator <code>|&gt;</code></h1>
 <pre><code>def cart_total(items) do</code>
 <code>  items</code>
-<code>  |&gt; Enum.map(&amp;(&amp;1.price))</code>
+<code>  |&gt; Enum.map(fn item -&gt; item.price end)</code>
 <code>  |&gt; add_tax</code>
 <code>  |&gt; Enum.sum</code>
 <code>end</code></pre><p><code>|&gt;</code> operator passes result from last method as first param in next
@@ -282,16 +311,6 @@
 <pre><code>iex&gt; :crypto.md5(&quot;sekr1t&quot;)</code>
 <code>&lt;&lt;192, 151, 240, 131, 252, 86, 1, 90, 71, 171, 2, …</code></pre><p>Can easily leverage 20+ years of Erlang libraries</p>
 
-	</div></section>
-	
-	<section class="slide quietest" ><div>
-		<h1>Elixir Functions In Assumed Namespace</h1>
-<pre><code>iex&gt; [1, 2, 3] |&gt; Enum.map &amp;(&amp;1 + 1)</code>
-<code>[2, 3, 4]</code>
-<code>&shy;</code>
-<code># same as</code>
-<code>iex&gt; [1, 2, 3] |&gt; :Elixir.Enum.map &amp;(&amp;1 + 1)</code>
-<code>[2, 3, 4]</code></pre>
 	</div></section>
 	
 	<section class="slide quieter shout" ><div>
@@ -310,33 +329,74 @@
 
 	</div></section>
 	
-	<section class="slide shout" ><div>
-		<h1>Hex Package Manager</h1>
-
-	</div></section>
-	
-	<section class="slide shout" ><div>
+	<section class="slide quietest smaller-code" ><div>
 		<h1>Mix Build Tool</h1>
-<h2>ex: <code>mix new myproject</code><br/><br/>or <code>mix phoenix.new myphoenix</code></h2>
-
+<pre><code>$ mix new myapp</code>
+<code>* creating README.md</code>
+<code>* creating .gitignore</code>
+<code>* creating mix.exs</code>
+<code>* creating config</code>
+<code>* creating config/config.exs</code>
+<code>* creating lib</code>
+<code>* creating lib/myapp.ex</code>
+<code>* creating test</code>
+<code>* creating test/test_helper.exs</code>
+<code>* creating test/myapp_test.exs</code>
+<code>&shy;</code>
+<code>Your mix project was created successfully.</code>
+<code>You can use mix to compile it, test it, and more:</code>
+<code>&shy;</code>
+<code>    cd myapp</code>
+<code>    mix test</code>
+<code>&shy;</code>
+<code>Run `mix help` for more commands.</code></pre>
 	</div></section>
 	
-	<section class="slide " ><div>
+	<section class="slide quietest smaller-code" ><div>
+		<h1>Hex Package Manager</h1>
+<pre><code>defmodule MyProject.Mixfile do</code>
+<code>  use Mix.Project</code>
+<code>&shy;</code>
+<code>  def project do</code>
+<code>    [app: :myapp,</code>
+<code>     version: &quot;0.0.1&quot;,</code>
+<code>     elixir: &quot;~&gt; 1.0&quot;,</code>
+<code>     deps: deps]</code>
+<code>  end   </code>
+<code>&shy;</code>
+<code>  def application do</code>
+<code>    [applications: [:logger]]</code>
+<code>  end</code>
+<code>&shy;</code>
+<code>  defp deps do</code>
+<code>    [{:ecto, &quot;~&gt; 0.11.3&quot;},</code>
+<code>     {:postgrex, &quot;~&gt; 0.8.1&quot;},</code>
+<code>     {:cowboy, github: &quot;extend/cowboy&quot;}]</code>
+<code>  end</code>
+<code>end</code></pre>
+	</div></section>
+	
+	<section class="slide quietest smaller-code" ><div>
 		<h1><code>iex</code> is a Great REPL</h1>
-<pre><code>$ iex -S mix</code>
-<code>iex&gt; h Enum.map&lt;tab&gt;</code>
+<pre><code>iex&gt; h Enum.map&lt;tab&gt;</code>
 <code>map/2           map_join/3      map_reduce/3</code>
 <code>&shy;</code>
 <code>iex&gt; h Enum.map/2</code>
 <code>&shy;</code>
-<code>            def map(collection, fun)</code>
+<code>                            def map(collection, fun)</code>
 <code>&shy;</code>
-<code>Returns a new collection, where each item is the… </code>
+<code>Returns a new collection, where each item is the result of invoking fun </code>
+<code>on each corresponding item of collection.</code>
+<code>&shy;</code>
+<code>For dicts, the function expects a key-value tuple.</code>
 <code>&shy;</code>
 <code>Examples</code>
 <code>&shy;</code>
 <code>┃ iex&gt; Enum.map([1, 2, 3], fn(x) -&gt; x * 2 end)</code>
-<code>┃ [2, 4, 6]</code></pre>
+<code>┃ [2, 4, 6]</code>
+<code>┃</code>
+<code>┃ iex&gt; Enum.map([a: 1, b: 2], fn({k, v}) -&gt; {k, -v} end)</code>
+<code>┃ [a: -1, b: -2]</code></pre>
 	</div></section>
 	
 	<section class="slide " ><div>
@@ -382,7 +442,7 @@
 	</div></section>
 	
 	<section class="slide " ><div>
-		<h1>Full Access to AST</h1>
+		<h1>Easy Access to AST</h1>
 <pre><code>iex&gt; ast = quote, do 2 * 2 / 7</code>
 <code>{:/,[context: Elixir, import: Kernel],</code>
 <code> [{:*,[context: Elixir, import: Kernel], [2, 2]}, 7]}</code></pre><p>Underlying AST looks a bit like a lisp</p>
@@ -440,21 +500,6 @@
 <code>:ok</code></pre>
 	</div></section>
 	
-	<section class="slide " ><div>
-		<h1>Agents Can Hold State</h1>
-<pre><code>iex&gt; {:ok, agent} = Agent.start_link(fn -&gt; 100 end)</code>
-<code>{:ok, #PID&lt;0.541.0&gt;}</code>
-<code>&shy;</code>
-<code>iex&gt; Agent.get(agent, fn val -&gt; val end)</code>
-<code>100</code>
-<code>&shy;</code>
-<code>iex&gt; Agent.update(agent, fn old -&gt; old + 100 end)</code>
-<code>:ok</code>
-<code>&shy;</code>
-<code>iex&gt; Agent.get(agent, fn val -&gt; val end)</code>
-<code>200</code></pre>
-	</div></section>
-	
 	<section class="slide shout quietest" ><div>
 		<h1>Isolation/Immutability Allows Garbage Collection at Process Level</h1>
 <h2>No big garbage collection pauses</h2>
@@ -463,6 +508,18 @@
 	
 	<section class="slide shout" ><div>
 		<h1>5. Failure Management</h1>
+
+	</div></section>
+	
+	<section class="slide quietest" ><div>
+		<h1>OTP Apps are Supervision Trees</h1>
+<img src="images/observer_apps.png" alt="" height="400px"/>
+<h2>Supervisors monitor/start/stop Child Workers/Supervisors</h2>
+
+	</div></section>
+	
+	<section class="slide shout quietest" ><div>
+		<h1>Elixir/OTP motto: &quot;Let it Crash&quot;</h1>
 
 	</div></section>
 	
@@ -478,31 +535,6 @@
 
 	</div></section>
 	
-	<section class="slide quietest" ><div>
-		<h1>An Executable Has Many Applications</h1>
-<img src="images/observer_apps.png" alt="" height="400px"/>
-<h2>Each application can be independently started/stopped/updated</h2>
-
-	</div></section>
-	
-	<section class="slide quietest" ><div>
-		<h1>Applications are Supervision Trees</h1>
-<img src="images/observer_apps.png" alt="" height="400px"/>
-<h2>Supervisors monitor/start/stop Child Workers/Supervisors</h2>
-
-	</div></section>
-	
-	<section class="slide shout quietest" ><div>
-		<h1>Important &amp; Hard Things Should Be Made Simple &amp; Commonplace</h1>
-<h2>(Examples: Continuous Integration, Continuous Deployment, Merging <br/>in Distributed Version Control, Autoscaling Infrastructure)</h2>
-
-	</div></section>
-	
-	<section class="slide shout quieter" ><div>
-		<h1>Failure <em>Will</em> Happen, Let It</h1>
-
-	</div></section>
-	
 	<section class="slide shout quieter" ><div>
 		<h1>Other Reasons for Picking Elixir</h1>
 
@@ -514,8 +546,10 @@
 
 	</div></section>
 	
-	<section class="slide shout" ><div>
-		<h1>Great Community</h1>
+	<section class="slide " ><div>
+		<h1>Great, Growing Community</h1>
+<img src="images/hex_downloads.png" alt="" height="400px"/>
+<p>Hex Downloads (from <a href="https://twitter.com/emjii/status/613370295618007040">@emjii</a> on 2015-06-24)</p>
 
 	</div></section>
 	
@@ -526,12 +560,13 @@
 	
 	<section class="slide shout quietest" ><div>
 		<h1>Elixir&#39;s Strengths<br/><br/>Apps with many connections &amp; high uptime requirements</h1>
-<h2>(i.e. Internet of Things, REST/socket webservices, Telephony)</h2>
+<h2>(i.e. Internet of Things, REST/socket webservices, Mobile App back-end, Telephony)</h2>
 
 	</div></section>
 	
 	<section class="slide shout quietest" ><div>
-		<h1>Elixir Weaknesses<br/><br/>Significant Graphics/GUI or Heavy Math</h1>
+		<h1>Elixir Weaknesses<br/><br/>Significant Graphics/GUI or Sequential Math</h1>
+<h2>There are better languages for the next Doom or Bitcoin mining</h2>
 
 	</div></section>
 	

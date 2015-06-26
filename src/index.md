@@ -39,9 +39,21 @@ by <a href="https://twitter.com/tednaleid">@tednaleid</a>
 !SLIDE quietest shout
 # Natural Syntax <br/><br/> Fast and Repeatable Dev Cycle <br/><br/> Concurrent and Fast <br/><br/> Metaprogramming <br/><br/> Failure Management
 
-!SLIDE quieter shout
-# Short List 
-## Ruby + $$$, Erlang, Clojure
+!SLIDE quietest 
+# Short List Choice #1: Ruby + $$$ 
+## <strong>Good</strong><br/>Natural Syntax, Fast and Repeatable Dev Cycle, Metaprogramming
+## <strong>Bad</strong><br/>Concurrent and Fast, Failure Management
+
+!SLIDE quietest 
+# Short List Choice #2: Erlang
+## <strong>Good</strong><br/>Failure Management, Concurrent and Fast
+## <strong>Bad</strong><br/>Natural Syntax, Fast and Repeatable Dev Cycle, Metaprogramming
+
+!SLIDE quietest 
+# Short List Choice #3: Clojure
+## <strong>Good</strong><br/>Concurrent and Fast, Metaprogramming, Fast &amp; Repeatable Dev Cycle
+## <strong>OK</strong><br/>Failure Management
+## <strong>Bad</strong><br/>Natural Syntax
 
 !SLIDE quieter shout
 # Met José, Found Elixir 
@@ -55,7 +67,7 @@ by <a href="https://twitter.com/tednaleid">@tednaleid</a>
 !SLIDE shout quieter
 # What is Erlang/BEAM?
 
-## Created by Ericsson in 1986 to support distributed, fault-tolerant, always-up systems
+## Language + VM, Created by Ericsson in 1986 to support distributed, fault-tolerant, always-up systems
 
 !SLIDE shout
 # How does Elixir satisfy 5 criteria?
@@ -108,17 +120,13 @@ by <a href="https://twitter.com/tednaleid">@tednaleid</a>
     iex> sum.(1, 2)
     3
     
+    # shortened closure syntax:
 
-!SLIDE 
-# Closures
-    
-    iex> sum = &(&1 + &2)
+    iex> short_sum = &(&1 + &2)
     &:erlang.+/2
 
-    iex> sum.(1, 2)
+    iex> short_sum.(1, 2)
     3
-
-shortened closure syntax
 
 !SLIDE
 
@@ -157,16 +165,26 @@ shortened closure syntax
 
 ## Some similarities to an OOP Interface
 
-
 !SLIDE 
 
 # Pattern Matching
+    iex> a = {:ok, 1}
+    {:ok, 1}  
 
-    iex> {:ok, result} = {:ok, "hello world"}
-    {:ok, "hello world"}
+    iex> {:ok, b} = {:ok, 1}
+    {:ok, 1}
 
-    iex> result
-    "hello world"
+    iex> b
+    1    
+
+!SLIDE 
+
+# Pattern Matching Lists
+    iex> [a, b, c] = [1, 2, 3]
+    [1, 2, 3]
+
+    iex> a
+    1
 
     iex> [head | tail] = [1, 2, 3]
     [1, 2, 3]
@@ -179,14 +197,16 @@ shortened closure syntax
 
 !SLIDE 
 
-# More Pattern Matching
+# Pattern Matching Structs
 
     case HTTP.get(url) do
-      {:ok, %HTTP.Resp{status_code: 200, body: body}} ->
+      {:ok, %HTTP.Resp{ status: 200, body: body }} ->
         IO.puts body
-      {:ok, %HTTP.Resp{status_code: 404}} ->
+      {:ok, %HTTP.Resp{ status: 404 }} ->
         IO.puts "Not found :("
-      {:error, %HTTP.Error{reason: reason}} ->
+      {:ok, %HTTP.Resp{ status: status }} ->
+        IO.puts "HTTP Status: #{status}"
+      {:error, %HTTP.Error{ reason: reason }} ->
         IO.inspect reason
       _ ->
         IO.puts "¯\_(ツ)_/¯"
@@ -215,18 +235,19 @@ shortened closure syntax
 
 # Pipe Operator `|>`
 
-    defmodule Store do
+    defmodule Shop do
       defp apply_tax(prices) do 
-        Enum.map(prices, &(&1 * 1.1))
+        Enum.map(prices, fn v -> v * 1.1 end)
       end
 
       def cart_total(items) do
-        Enum.sum(apply_tax(Enum.map(items, &(&1.price))))
+        Enum.sum(
+          apply_tax(
+            Enum.map(items, fn item -> item.price end)))
       end
     end 
     
-    items = [%{:price => 5.00}, %{:price => 2.00}]
-    Store.cart_total(items)
+    Shop.cart_total([%{:price=>5.00}, %{:price=>2.00}])
     # => 7.7
 
 Nested `cart_total` is hard to read, have to read inside out
@@ -236,7 +257,7 @@ Nested `cart_total` is hard to read, have to read inside out
 # Pipe Operator `|>`
 
       def cart_total(items) do
-        prices = Enum.map(items, &(&1.price))
+        prices = Enum.map(items, fn itm -> itm.price end)
         prices_with_tax = apply_tax(prices)
         Enum.sum(prices_with_tax)
       end
@@ -249,7 +270,7 @@ Intermediate variables cleans up a bit
 
     def cart_total(items) do
       items
-      |> Enum.map(&(&1.price))
+      |> Enum.map(fn item -> item.price end)
       |> add_tax
       |> Enum.sum
     end
@@ -270,16 +291,6 @@ Similar to unix pipe: `ps ax | grep iex | awk '{ print $1 }'`
 
 Can easily leverage 20+ years of Erlang libraries
 
-!SLIDE quietest
-# Elixir Functions In Assumed Namespace
-
-    iex> [1, 2, 3] |> Enum.map &(&1 + 1)
-    [2, 3, 4]
-
-    # same as
-    iex> [1, 2, 3] |> :Elixir.Enum.map &(&1 + 1)
-    [2, 3, 4]
-
 
 !SLIDE quieter shout
 
@@ -295,34 +306,79 @@ Can easily leverage 20+ years of Erlang libraries
 
 # Hot Reloading Without Restarting   
 
-!SLIDE shout
-
-# Hex Package Manager
-
-!SLIDE shout
+!SLIDE quietest smaller-code
 
 # Mix Build Tool
 
-## ex: `mix new myproject`<br/><br/>or `mix phoenix.new myphoenix`
+    $ mix new myapp
+    * creating README.md
+    * creating .gitignore
+    * creating mix.exs
+    * creating config
+    * creating config/config.exs
+    * creating lib
+    * creating lib/myapp.ex
+    * creating test
+    * creating test/test_helper.exs
+    * creating test/myapp_test.exs
 
-!SLIDE 
+    Your mix project was created successfully.
+    You can use mix to compile it, test it, and more:
+
+        cd myapp
+        mix test
+
+    Run `mix help` for more commands.
+
+!SLIDE quietest smaller-code
+
+# Hex Package Manager
+ 
+    defmodule MyProject.Mixfile do
+      use Mix.Project
+
+      def project do
+        [app: :myapp,
+         version: "0.0.1",
+         elixir: "~> 1.0",
+         deps: deps]
+      end   
+
+      def application do
+        [applications: [:logger]]
+      end
+
+      defp deps do
+        [{:ecto, "~> 0.11.3"},
+         {:postgrex, "~> 0.8.1"},
+         {:cowboy, github: "extend/cowboy"}]
+      end
+    end
+
+
+!SLIDE quietest smaller-code
 
 # `iex` is a Great REPL 
 
-    $ iex -S mix
     iex> h Enum.map<tab>
     map/2           map_join/3      map_reduce/3
 
     iex> h Enum.map/2
 
-                def map(collection, fun)
+                                def map(collection, fun)
 
-    Returns a new collection, where each item is the… 
+    Returns a new collection, where each item is the result of invoking fun 
+    on each corresponding item of collection.
+
+    For dicts, the function expects a key-value tuple.
 
     Examples
 
     ┃ iex> Enum.map([1, 2, 3], fn(x) -> x * 2 end)
     ┃ [2, 4, 6]
+    ┃
+    ┃ iex> Enum.map([a: 1, b: 2], fn({k, v}) -> {k, -v} end)
+    ┃ [a: -1, b: -2]
 
 
 !SLIDE
@@ -374,7 +430,7 @@ Similar to the JavaScript `debugger;` command
 
 !SLIDE 
 
-# Full Access to AST
+# Easy Access to AST
 
     iex> ast = quote, do 2 * 2 / 7
     {:/,[context: Elixir, import: Kernel],
@@ -431,22 +487,6 @@ At time of Facebook acquisition for $19 Billion
     hello world
     :ok
 
-!SLIDE
-
-# Agents Can Hold State
-
-    iex> {:ok, agent} = Agent.start_link(fn -> 100 end)
-    {:ok, #PID<0.541.0>}
-
-    iex> Agent.get(agent, fn val -> val end)
-    100
-
-    iex> Agent.update(agent, fn old -> old + 100 end)
-    :ok
-
-    iex> Agent.get(agent, fn val -> val end)
-    200
-
 !SLIDE shout quietest
 
 # Isolation/Immutability Allows Garbage Collection at Process Level
@@ -455,6 +495,19 @@ At time of Facebook acquisition for $19 Billion
 
 !SLIDE shout
 # 5. Failure Management      
+
+!SLIDE quietest
+
+# OTP Apps are Supervision Trees
+
+<img src="images/observer_apps.png" alt="" height="400px"/>
+
+## Supervisors monitor/start/stop Child Workers/Supervisors
+
+!SLIDE shout quietest
+
+# Elixir/OTP motto: "Let it Crash"
+
 
 !SLIDE shout quietest
 
@@ -469,34 +522,6 @@ At time of Facebook acquisition for $19 Billion
 ## Exception handling is rare
 
 
-!SLIDE quietest
-
-# An Executable Has Many Applications
-
-<img src="images/observer_apps.png" alt="" height="400px"/>
-
-## Each application can be independently started/stopped/updated
-
-
-!SLIDE quietest
-
-# Applications are Supervision Trees
-
-<img src="images/observer_apps.png" alt="" height="400px"/>
-
-## Supervisors monitor/start/stop Child Workers/Supervisors
-
-
-!SLIDE shout quietest
-
-# Important &amp; Hard Things Should Be Made Simple & Commonplace
-
-## (Examples: Continuous Integration, Continuous Deployment, Merging <br/>in Distributed Version Control, Autoscaling Infrastructure)
-
-
-!SLIDE shout quieter
-# Failure _Will_ Happen, Let It 
-
 !SLIDE shout quieter
 # Other Reasons for Picking Elixir
 
@@ -505,8 +530,13 @@ At time of Facebook acquisition for $19 Billion
 
 ## Elixir killer app; most developers weren't interested in <br/>Ruby till Rails &amp; Groovy till Grails  
 
-!SLIDE shout
-# Great Community
+!SLIDE 
+# Great, Growing Community
+
+<img src="images/hex_downloads.png" alt="" height="400px"/>
+
+Hex Downloads (from [@emjii](https://twitter.com/emjii/status/613370295618007040) on 2015-06-24)
+
 
 !SLIDE shout
 # Solid Documentation
@@ -515,10 +545,12 @@ At time of Facebook acquisition for $19 Billion
 
 # Elixir's Strengths<br/><br/>Apps with many connections &amp; high uptime requirements
 
-## (i.e. Internet of Things, REST/socket webservices, Telephony)
+## (i.e. Internet of Things, REST/socket webservices, Mobile App back-end, Telephony)
 
 !SLIDE shout quietest
-# Elixir Weaknesses<br/><br/>Significant Graphics/GUI or Heavy Math
+# Elixir Weaknesses<br/><br/>Significant Graphics/GUI or Sequential Math
+
+## There are better languages for the next Doom or Bitcoin mining
 
 
 !SLIDE quietest shout

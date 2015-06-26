@@ -1,5 +1,7 @@
 Presentation is in index.html.
 
+It can be viewed on the web on the [github pages branch](http://tednaleid.github.io/intro-to-elixir/).
+
 To recompile it you'll have to have ruby and sass installed as well as node
 
 first:
